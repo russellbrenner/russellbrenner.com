@@ -265,7 +265,7 @@ const appearances = (await getCollection('appearances'))
     }
 
     <!-- 5. Talks / Appearances -->
-    <section>
+    {appearances.length > 0 && <section>
       <div class="flex items-baseline justify-between mb-8 sm:mb-12">
         <h2 class="text-xs font-bold uppercase tracking-[0.2em] text-muted-foreground">
           Talks & Appearances
@@ -312,7 +312,7 @@ const appearances = (await getCollection('appearances'))
           ))
         }
       </div>
-    </section>
+    </section>}
   </div>
 </Layout>
 
