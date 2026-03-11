@@ -1,0 +1,68 @@
+name: Build russellbrenner.com
+
+on:
+  push:
+    branches: [main]
+  workflow_dispatch:
+
+jobs:
+  build:
+    runs-on: self-hosted
+
+    steps:
+      - name: Checkout
+        env:
+          DEPLOY_TOKEN: ${{ secrets.DEPLOY_TOKEN }}
+        run: |
+          REPO_URL="${{ github.server_url }}/${{ github.repository }}.git"
+          AUTH_URL=$(echo "$REPO_URL" | sed "s|https://|https://token:${DEPLOY_TOKEN}@|")
+          rm -rf checkout && git clone --depth=1 "$AUTH_URL" checkout
+
+      - name: Registry login
+        env:
+          REGISTRY_USER: ${{ secrets.REGISTRY_USER }}
+          REGISTRY_TOKEN: ${{ secrets.REGISTRY_TOKEN }}
+        run: |
+          buildah login -u "${REGISTRY_USER}" -p "${REGISTRY_TOKEN}" ${{ vars.REGISTRY_URL }}
+          buildah login --tls-verify=false -u "${REGISTRY_USER}" -p "${REGISTRY_TOKEN}" ${{ vars.REGISTRY_INTERNAL }}
+
+      - name: Build image
+        run: |
+          buildah bud --isolation=chroot \
+            --tag ${{ vars.REGISTRY_URL }}/rbrenner/russellbrenner:latest \
+            --tag ${{ vars.REGISTRY_URL }}/rbrenner/russellbrenner:${{ github.sha }} \
+            checkout/
+
+      - name: Push image
+        run: |
+          INTERNAL=${{ vars.REGISTRY_INTERNAL }}
+          push_internal() {
+            local img=$1 attempt=0
+            local dest=$(echo "$img" | sed "s|${{ vars.REGISTRY_URL }}|$INTERNAL|")
+            while [ $attempt -lt 3 ]; do
+              attempt=$((attempt + 1))
+              echo "Push attempt $attempt/3: $img (via internal)"
+              if buildah push --tls-verify=false "$img" "docker://$dest"; then return 0; fi
+              echo "Attempt $attempt failed, retrying in 15s..."
+              sleep 15
+            done
+            echo "Push failed after 3 attempts: $img"
+            return 1
+          }
+          push_internal ${{ vars.REGISTRY_URL }}/rbrenner/russellbrenner:latest
+          push_internal ${{ vars.REGISTRY_URL }}/rbrenner/russellbrenner:${{ github.sha }}
+
+      - name: Rollout
+        run: |
+          kubectl rollout restart deployment/russellbrenner -n russellbrenner
+          kubectl rollout status deployment/russellbrenner -n russellbrenner --timeout=120s
+
+      - name: Notify
+        if: always()
+        env:
+          WEBHOOK: ${{ secrets.MATTERMOST_AGENT_WEBHOOK }}
+        run: |
+          STATUS="${{ job.status }}"
+          EMOJI=$([ "$STATUS" = "success" ] && echo ":white_check_mark:" || echo ":x:")
+          curl -s -X POST "$WEBHOOK" -H "Content-Type: application/json" -d \
+            "{\"text\": \"$EMOJI **russellbrenner.com** build $STATUS — \`${{ github.sha }}\`\"}"

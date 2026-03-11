@@ -1,14 +1,4 @@
-# 💼 Hire me if you like this post
+# Found something useful?
 
-I'm available for **freelance projects** and **full-time opportunities**.
-
-Whether you need:
-
-- A modern, performant website
-- Technical consultation
-- Code review and optimization
-- Or just want to chat about web development
-
-Let's build something amazing together!
-
-[Get in touch](mailto:astronaut@example.com)
+I write about infrastructure, AI agents, and building legal tools as a law student.
+If any of this is relevant to your work, I'm on [LinkedIn](https://www.linkedin.com/in/russellbrenner/) or [GitHub](https://github.com/russellbrenner).

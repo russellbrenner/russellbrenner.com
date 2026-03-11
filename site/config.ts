@@ -25,7 +25,7 @@ export interface SiteConfig {
   // CTA (Call-to-Action) block for blog posts
   cta: {
     enabled: boolean;
-    filePath: string; // Path to markdown file with CTA content
+    filePath: string;
   };
 
   // Homepage Hero block
@@ -37,7 +37,7 @@ export interface SiteConfig {
   // Giscus comments configuration
   comments: {
     enabled: boolean;
-    repo: string; // e.g., 'username/repo'
+    repo: string;
     repoId: string;
     category: string;
     categoryId: string;
@@ -45,42 +45,39 @@ export interface SiteConfig {
     reactionsEnabled: boolean;
     emitMetadata: boolean;
     inputPosition: 'top' | 'bottom';
-    theme: string; // e.g., 'preferred_color_scheme', 'light', 'dark'
+    theme: string;
     lang: string;
   };
 }
 
 export const SITE: SiteConfig = {
-  author: 'Astronaut',
-  desc: 'Developer and designer building premium web experiences.',
-  title: 'Spaceship',
+  author: 'Russell Brenner',
+  desc: 'Infrastructure architect and law student building AI tools for legal practice.',
+  title: 'Russell Brenner',
   ogImage: 'og.png',
-  lang: 'en-US',
+  lang: 'en-AU',
   base: '/',
-  website: 'https://spaceship-one.vercel.app',
+  website: 'https://russellbrenner.com',
   social: {
-    x: 'https://x.com/astronaut',
-    github: 'https://github.com/astronaut',
-    telegram: 'https://t.me/astronaut',
-    facebook: 'https://facebook.com/astronaut',
+    linkedin: 'https://www.linkedin.com/in/russellbrenner/',
+    github: 'https://github.com/russellbrenner',
   },
-  googleAnalyticsId: '', // Example: 'G-XXXXXXXXXX'
+  googleAnalyticsId: '',
   homeHeroDescription:
-    'Building premium web experiences with Astro, Svelte, and Tailwind. Focused on performance, aesthetics, and clean code. I am currently working on open-source tools and sharing my journey through writing.',
-  blogDescription: 'A collection of thoughts, tutorials, and general web discovery.',
-  projectsDescription: 'Things I’ve built that I’m proud of. Many of them are open-source.',
+    '25 years of infrastructure and pre-sales. Now building AI tools for legal practice and studying law at Swinburne. The code is AI-assisted. The architecture, judgment, and operations are mine.',
+  blogDescription:
+    'Thinking out loud on infrastructure, AI agents, and building legal tools while studying law.',
+  projectsDescription:
+    'Tools I build and operate. Some are live. Some are in development. All are real.',
 
-  // Homepage post counts
-  featuredPostsCount: 3,
+  featuredPostsCount: 2,
   latestPostsCount: 3,
 
-  // Homepage projects
   homeProjects: {
     enabled: true,
     count: 4,
   },
 
-  // CTA (Call-to-Action) block for blog posts
   cta: {
     enabled: true,
     filePath: 'site/cta.md',
@@ -91,19 +88,17 @@ export const SITE: SiteConfig = {
     filePath: 'site/hero.md',
   },
 
-  // Giscus comments configuration
-  // Get your configuration from https://giscus.app
   comments: {
-    enabled: false, // Set to true after filling in the IDs below
-    repo: 'alec-c4/spaceship', // Your GitHub repository
-    repoId: '', // Get from https://giscus.app - enter repo above and copy the value
-    category: 'General', // GitHub Discussions category name
-    categoryId: '', // Get from https://giscus.app - select category and copy the value
+    enabled: false,
+    repo: 'russellbrenner/russellbrenner.com',
+    repoId: '',
+    category: 'General',
+    categoryId: '',
     mapping: 'pathname',
     reactionsEnabled: true,
     emitMetadata: false,
     inputPosition: 'bottom',
-    theme: 'preferred_color_scheme', // Automatically matches your site theme
+    theme: 'preferred_color_scheme',
     lang: 'en',
   },
 };

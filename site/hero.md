@@ -1,6 +1,6 @@
-# I'm {author}, developer and designer.
+# I'm Russell Brenner.
 
-Building premium web experiences with Astro, Svelte, and Tailwind.
-Focused on performance, aesthetics, and clean code.
+25 years of networking, pre-sales, and solutions architecture across Melbourne.
+Now building AI tools for legal practice and studying law at Swinburne, targeting the Victorian Bar.
 
-I am currently working on open-source tools and sharing my journey through writing.
+The code is AI-assisted. The architecture, judgment, and operations are mine.
