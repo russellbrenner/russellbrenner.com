@@ -2,7 +2,7 @@
 title: 'Silk'
 description: 'AI workflow platform for barristers. Brief triage, document search, citation synthesis.'
 tags: ['Legal AI', 'Barristers', 'Workflow Automation', 'Victorian Bar']
-types: ['in-development']
+types: [commercial]
 order: 2
 ---
 

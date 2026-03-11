@@ -2,7 +2,7 @@
 title: 'Homelab Infrastructure'
 description: '90+ services on a two-node k3s cluster, operated by one person with seven-layer monitoring.'
 tags: ['Infrastructure', 'Kubernetes', 'k3s', 'Self-hosted']
-types: ['personal']
+types: [social]
 order: 5
 ---
 

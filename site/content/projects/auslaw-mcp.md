@@ -4,7 +4,7 @@ description: 'Semantic search for Australian case law. Plain-language queries, a
 link: 'https://github.com/russellbrenner/auslaw-mcp'
 github: 'https://github.com/russellbrenner/auslaw-mcp'
 tags: ['Legal AI', 'RAG', 'MCP', 'Australian Law']
-types: ['open-source']
+types: [open-source]
 order: 1
 ---
 

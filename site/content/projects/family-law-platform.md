@@ -2,7 +2,7 @@
 title: 'Family Law Litigation Support'
 description: 'AI tools for family law participants — solicitors, paralegals, and self-represented litigants.'
 tags: ['Legal AI', 'Family Law', 'Litigation Support', 'Access to Justice']
-types: ['in-development']
+types: [commercial]
 order: 3
 ---
 

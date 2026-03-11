@@ -3,7 +3,7 @@ title: 'AI Agent Orchestration'
 description: 'Multi-host platform coordinating Claude Code sessions with real-time LLM supervision.'
 github: 'https://github.com/russellbrenner'
 tags: ['AI Infrastructure', 'Agent Orchestration', 'MCP', 'TypeScript']
-types: ['personal']
+types: [social]
 order: 4
 ---
 
