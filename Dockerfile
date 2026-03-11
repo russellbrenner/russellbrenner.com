@@ -4,10 +4,12 @@ RUN apk add --no-cache git
 
 WORKDIR /app
 
+ENV LEFTHOOK=0
+
 RUN npm install -g pnpm@latest
 
 COPY package.json pnpm-lock.yaml pnpm-workspace.yaml ./
-RUN LEFTHOOK=0 pnpm install --frozen-lockfile
+RUN pnpm install --frozen-lockfile
 
 COPY . .
 RUN pnpm build
