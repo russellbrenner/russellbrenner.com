@@ -1,11 +1,13 @@
 FROM node:22-alpine AS builder
 
+RUN apk add --no-cache git
+
 WORKDIR /app
 
 RUN npm install -g pnpm@latest
 
 COPY package.json pnpm-lock.yaml pnpm-workspace.yaml ./
-RUN pnpm install --frozen-lockfile --ignore-scripts
+RUN pnpm install --frozen-lockfile
 
 COPY . .
 RUN pnpm build
