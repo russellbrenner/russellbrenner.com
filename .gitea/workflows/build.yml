@@ -52,6 +52,16 @@ jobs:
           push_internal ${{ vars.REGISTRY_URL }}/rbrenner/russellbrenner:latest
           push_internal ${{ vars.REGISTRY_URL }}/rbrenner/russellbrenner:${{ github.sha }}
 
+      - name: Install kubectl
+        run: |
+          if [ ! -f /data/cache/kubectl ]; then
+            mkdir -p /data/cache
+            KUBE_VERSION=$(curl -sL https://dl.k8s.io/release/stable.txt)
+            curl -sLo /data/cache/kubectl "https://dl.k8s.io/release/${KUBE_VERSION}/bin/linux/amd64/kubectl"
+            chmod +x /data/cache/kubectl
+          fi
+          echo "/data/cache" >> "$GITHUB_PATH"
+
       - name: Rollout
         run: |
           kubectl rollout restart deployment/russellbrenner -n russellbrenner
