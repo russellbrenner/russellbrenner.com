@@ -74,5 +74,5 @@ jobs:
         run: |
           STATUS="${{ job.status }}"
           EMOJI=$([ "$STATUS" = "success" ] && echo ":white_check_mark:" || echo ":x:")
-          curl -s -X POST "$WEBHOOK" -H "Content-Type: application/json" -d \
-            "{\"text\": \"$EMOJI **russellbrenner.com** build $STATUS — \`${{ github.sha }}\`\"}"
+          [ -n "$WEBHOOK" ] && curl -sf -X POST "$WEBHOOK" -H "Content-Type: application/json" -d \
+            "{\"text\": \"$EMOJI **russellbrenner.com** build $STATUS — \`${{ github.sha }}\`\"}" || true
