@@ -4,12 +4,11 @@ RUN apk add --no-cache git
 
 WORKDIR /app
 
-ENV LEFTHOOK=0
-
 RUN npm install -g pnpm@latest
 
 COPY package.json pnpm-lock.yaml pnpm-workspace.yaml ./
-RUN pnpm install --frozen-lockfile
+# Init a bare git repo so lefthook's prepare script doesn't fail
+RUN git init && pnpm install --frozen-lockfile
 
 COPY . .
 RUN pnpm build
