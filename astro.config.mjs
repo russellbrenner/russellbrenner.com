@@ -3,7 +3,7 @@ import { defineConfig } from 'astro/config';
 import svelte from '@astrojs/svelte';
 import mdx from '@astrojs/mdx';
 import sitemap from '@astrojs/sitemap';
-import partytown from '@astrojs/partytown';
+
 import tailwindcss from '@tailwindcss/vite';
 import path from 'node:path';
 import { fileURLToPath } from 'node:url';
@@ -29,11 +29,6 @@ export default defineConfig({
     svelte(),
     mdx(),
     sitemap(),
-    partytown({
-      config: {
-        forward: ['dataLayer.push'],
-      },
-    }),
   ],
   build: {
     inlineStylesheets: 'always',
