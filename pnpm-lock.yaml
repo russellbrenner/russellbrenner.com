@@ -124,8 +124,8 @@ importers:
         specifier: ^3.5.0
         version: 3.5.0(prettier@3.8.1)(svelte@5.53.5)
       svelte-check:
-        specifier: ^4.4.3
-        version: 4.4.3(picomatch@4.0.3)(svelte@5.53.5)(typescript@5.9.3)
+        specifier: ^4.4.6
+        version: 4.4.6(picomatch@4.0.3)(svelte@5.53.5)(typescript@5.9.3)
       svelte-eslint-parser:
         specifier: ^1.5.0
         version: 1.5.0(svelte@5.53.5)
@@ -3194,8 +3194,8 @@ packages:
   suf-log@2.5.3:
     resolution: {integrity: sha512-KvC8OPjzdNOe+xQ4XWJV2whQA0aM1kGVczMQ8+dStAO6KfEB140JEVQ9dE76ONZ0/Ylf67ni4tILPJB41U0eow==}
 
-  svelte-check@4.4.3:
-    resolution: {integrity: sha512-4HtdEv2hOoLCEsSXI+RDELk9okP/4sImWa7X02OjMFFOWeSdFF3NFy3vqpw0z+eH9C88J9vxZfUXz/Uv2A1ANw==}
+  svelte-check@4.4.6:
+    resolution: {integrity: sha512-kP1zG81EWaFe9ZyTv4ZXv44Csi6Pkdpb7S3oj6m+K2ec/IcDg/a8LsFsnVLqm2nxtkSwsd5xPj/qFkTBgXHXjg==}
     engines: {node: '>= 18.0.0'}
     hasBin: true
     peerDependencies:
@@ -7257,7 +7257,7 @@ snapshots:
     dependencies:
       s.color: 0.0.15
 
-  svelte-check@4.4.3(picomatch@4.0.3)(svelte@5.53.5)(typescript@5.9.3):
+  svelte-check@4.4.6(picomatch@4.0.3)(svelte@5.53.5)(typescript@5.9.3):
     dependencies:
       '@jridgewell/trace-mapping': 0.3.31
       chokidar: 4.0.3
