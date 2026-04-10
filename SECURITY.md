@@ -4,7 +4,145 @@
 
 This repository follows a defense-in-depth security approach with automated scanning at multiple layers. All security checks run on every push and pull request.
 
+## Security Pipeline Architecture
+
+```d2
+direction: right
+
+Pipeline: {
+  Push: {
+    shape: cylinder
+    style: {
+      font-size: 14
+    }
+  }
+
+  GitHub: {
+    Actions: {
+      shape: page
+      style: {
+        font-size: 14
+      }
+    }
+  }
+
+  Scanners: {
+    TruffleHog: {
+      shape: hexagon
+      style: {
+        font-size: 12
+        stroke-width: 2
+      }
+    }
+    Gitleaks: {
+      shape: hexagon
+      style: {
+        font-size: 12
+        stroke-width: 2
+      }
+    }
+    Semgrep: {
+      shape: hexagon
+      style: {
+        font-size: 12
+        stroke-width: 2
+      }
+    }
+    Trivy: {
+      shape: hexagon
+      style: {
+        font-size: 12
+        stroke-width: 2
+      }
+    }
+    CodeQL: {
+      shape: hexagon
+      style: {
+        font-size: 12
+        stroke-width: 2
+      }
+    }
+  }
+
+  Results: {
+    Security: {
+      label: "GitHub Security Tab"
+      shape: document
+      style: {
+        font-size: 14
+      }
+    }
+  }
+
+  Deploy: {
+    shape: cloud
+    style: {
+      font-size: 14
+    }
+  }
+}
+
+Push -> GitHub: Actions
+GitHub -> Scanners: "Parallel Execution"
+Scanners.TruffleHog -> Results
+Scanners.Gitleaks -> Results
+Scanners.Semgrep -> Results
+Scanners.Trivy -> Results
+Scanners.CodeQL -> Results
+GitHub -> Deploy: "On Success"
+
+Scanners: {
+  style: {
+    fill-color: "#f0f0f0"
+    stroke: "#333"
+  }
+}
+```
+
 ## Security Scanning Stack
+
+```d2
+direction: down
+
+Scanning: {
+  Secrets: {
+    TruffleHog: {
+      icon: https://trufflesecurity.com/favicon.ico
+      label: "Git History\n--only-verified"
+    }
+    Gitleaks: {
+      icon: https://github.com/gitleaks/gitleaks/raw/master/gitleaks.png
+      label: "Pattern Match\n+ Entropy"
+    }
+  }
+
+  SAST: {
+    Semgrep: {
+      label: "OWASP Top 10\nXSS, JWT, Node.js"
+    }
+    CodeQL: {
+      label: "Semantic Analysis\nSQLi, Path Traversal"
+    }
+  }
+
+  SCA: {
+    Trivy: {
+      label: "Dependencies\nCVEs, Secrets, Config"
+    }
+  }
+}
+
+Scanning.Secrets -> SAST: "Layer 1 → Layer 2"
+Scanning.SAST -> SCA: "Layer 2 → Layer 3"
+
+Scanning: {
+  style: {
+    fill-color: "#e8f4f8"
+    stroke: "#0066cc"
+    stroke-width: 2
+  }
+}
+```
 
 ### 1. TruffleHog — Deep Secret Detection
 
@@ -70,6 +208,46 @@ This repository follows a defense-in-depth security approach with automated scan
 - Insecure deserialization
 
 ## Scan Schedule
+
+```d2
+direction: right
+
+Triggers: {
+  Push: {
+    shape: rectangle
+    label: "Push to main"
+  }
+  PR: {
+    shape: rectangle
+    label: "Pull Request"
+  }
+  Weekly: {
+    shape: rectangle
+    label: "Cron: Mon 03:17 UTC"
+  }
+}
+
+Actions: {
+  Full: {
+    label: "Full Scan\n(5 tools)"
+    style: {
+      fill-color: "#4CAF50"
+      font-color: white
+    }
+  }
+  History: {
+    label: "Deep History\n(TruffleHog)"
+    style: {
+      fill-color: "#FF9800"
+      font-color: white
+    }
+  }
+}
+
+Push -> Full
+PR -> Full
+Weekly -> History
+```
 
 | Scan Type               | Trigger                    |
 | ----------------------- | -------------------------- |

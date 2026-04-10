@@ -7,21 +7,105 @@ Professional portfolio and technical blog built with Astro 5, Svelte 5, and Tail
 **Production:** https://russellbrenner.com  
 **Source:** https://github.com/russellbrenner/russellbrenner.com
 
+## Architecture Overview
+
+```d2
+direction: right
+
+GitHub: {
+  Repo: {
+    shape: repository
+    label: "russellbrenner.com\n(main branch)"
+  }
+
+  Actions: {
+    CI: {
+      label: "CI Workflow\nlint, type-check, build"
+      style: {
+        fill-color: "#333"
+        font-color: white
+      }
+    }
+    Security: {
+      label: "Security Scan\n5 tools"
+      style: {
+        fill-color: "#4CAF50"
+        font-color: white
+      }
+    }
+  }
+}
+
+Cloudflare: {
+  Pages: {
+    shape: cloud
+    label: "Cloudflare Pages\nrussellbrenner-com"
+  }
+  DNS: {
+    label: "DNS\nrussellbrenner.com"
+  }
+}
+
+GitHub.Repo -> GitHub.Actions.CI: "push"
+GitHub.Repo -> GitHub.Actions.Security: "push"
+GitHub.Actions.CI -> Cloudflare.Pages: "deploy on success"
+Cloudflare.Pages -> Cloudflare.DNS: "CNAME"
+```
+
 ---
 
-## Architecture
+## CI/CD Pipeline Flow
 
-```
-┌─────────────────┐     ┌──────────────────┐     ┌─────────────────┐
-│   GitHub Repo   │ ──▶ │  GitHub Actions  │ ──▶ │  Cloudflare     │
-│   (main branch) │     │  (CI/CD)         │     │  Pages          │
-└─────────────────┘     └──────────────────┘     └─────────────────┘
-                                                       │
-                                                       ▼
-                                              ┌─────────────────┐
-                                              │  Cloudflare DNS │
-                                              │  *.russellbrenner.com
-                                              └─────────────────┘
+```d2
+direction: down
+
+Commit: {
+  shape: git_commit
+  label: "git push\nmain"
+}
+
+Validation: {
+  Lint: {
+    label: "ESLint\nFormat Check"
+  }
+  Types: {
+    label: "Astro Check\nSvelte Check"
+  }
+  Security: {
+    label: "5 Security Scans"
+    style: {
+      stroke-width: 3
+      stroke: "#4CAF50"
+    }
+  }
+}
+
+Build: {
+  Astro: {
+    label: "pnpm build\n26 pages"
+  }
+}
+
+Deploy: {
+  CF: {
+    shape: cloud
+    label: "Cloudflare Pages\n~30s propagation"
+  }
+}
+
+Commit -> Validation
+Validation.Lint -> Build
+Validation.Types -> Build
+Validation.Security -> Build
+Build -> Deploy.CF
+
+Validation: {
+  direction: right
+  style: {
+    fill-color: "#fff3cd"
+    stroke: "#ffc107"
+  }
+}
 ```
 
 **Build:** Astro static site generation (SSG)  
@@ -174,6 +258,44 @@ pnpm build
 
 ### Pre-Commit Hooks (Lefthook)
 
+```d2
+direction: right
+
+Developer: {
+  shape: person
+  label: "Developer\nmakes changes"
+}
+
+Hooks: {
+  Lint: {
+    label: "lint\nESLint"
+  }
+  Format: {
+    label: "format\nPrettier"
+  }
+  Types: {
+    label: "type-check\nAstro + Svelte"
+  }
+}
+
+Git: {
+  shape: git_commit
+  label: "commit"
+}
+
+Developer -> Hooks
+Hooks.Lint -> Git
+Hooks.Format -> Git
+Hooks.Types -> Git
+
+Hooks: {
+  style: {
+    fill-color: "#e3f2fd"
+    stroke: "#1976D2"
+  }
+}
+```
+
 Runs locally before every commit:
 
 | Hook         | Purpose                   |
@@ -184,18 +306,102 @@ Runs locally before every commit:
 
 ### GitHub Actions CI
 
+```d2
+direction: down
+
+Trigger: {
+  shape: rectangle
+  label: "push / pull_request"
+}
+
+Jobs: {
+  Lint: {
+    label: "lint\nESLint"
+  }
+  Format: {
+    label: "format\nPrettier"
+  }
+  TypeCheck: {
+    label: "type-check\nAstro + Svelte"
+  }
+  Security: {
+    label: "security\n5 tools"
+    style: {
+      fill-color: "#4CAF50"
+      font-color: white
+    }
+  }
+  Build: {
+    label: "build\nAstro SSG"
+  }
+  Deploy: {
+    label: "deploy\nCloudflare Pages"
+    shape: cloud
+    style: {
+      fill-color: "#FF9800"
+      font-color: white
+    }
+  }
+}
+
+Trigger -> Jobs.Lint
+Trigger -> Jobs.Format
+Trigger -> Jobs.TypeCheck
+Trigger -> Jobs.Security
+Jobs -> Jobs.Build: "all pass"
+Jobs.Build -> Jobs.Deploy: "success"
+
+Jobs: {
+  style: {
+    fill-color: "#f5f5f5"
+    stroke: "#333"
+  }
+}
+```
+
 Runs on every push/PR:
 
 | Job          | Purpose                                      |
 | ------------ | -------------------------------------------- |
 | `lint`       | ESLint full repo                             |
-| `format`     | Prettier check                               |
+| `format`     | Prettier format check                        |
 | `type-check` | Astro + Svelte                               |
 | `security`   | TruffleHog, Gitleaks, Semgrep, Trivy, CodeQL |
 | `build`      | Astro build                                  |
 | `deploy`     | Cloudflare Pages upload                      |
 
 ### Weekly Security Scan
+
+```d2
+Cron: {
+  shape: clock
+  label: "Every Monday\n03:17 UTC"
+}
+
+Scans: {
+  TruffleHog: {
+    label: "TruffleHog\nFull git history\n--only-verified"
+    style: {
+      fill-color: "#FF5722"
+      font-color: white
+    }
+  }
+  Gitleaks: {
+    label: "Gitleaks\nDeep scan\nVerified secrets"
+  }
+  Trivy: {
+    label: "Trivy\nSCA + SARIF\nUpload"
+  }
+}
+
+Cron -> Scans.TruffleHog
+Cron -> Scans.Gitleaks
+Cron -> Scans.Trivy
+
+Scans: {
+  direction: down
+}
+```
 
 Every Monday at 03:17 UTC:
 
