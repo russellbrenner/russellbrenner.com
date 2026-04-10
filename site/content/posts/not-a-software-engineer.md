@@ -8,7 +8,7 @@ featured: true
 
 I've never held a software engineering title. Not once in 25 years. My career is networking, pre-sales, solutions architecture, and customer success. I started at an ISP in Melbourne in 2000, worked my way into carrier ethernet engineering, spent a decade selling and designing enterprise network and security solutions, and ended up as a Technical Account Manager at an edge computing company. At every stop, I was the person who understood the technology deeply enough to design solutions and explain them to customers. I was never the person who wrote the production code.
 
-Today I'm running 88 Kubernetes deployments across 47 namespaces on a two-node cluster. I've built a multi-agent orchestration platform with 42 custom skills and real-time LLM supervision, a legal semantic search engine, and a study automation platform that syncs my university's LMS and schedules spaced repetition. All in production. All AI-assisted.
+Today I'm running 114 Kubernetes deployments across 80 namespaces on a two-node cluster. I've built a multi-agent orchestration platform with 13 custom skills and real-time LLM supervision, a legal semantic search engine, and a study automation platform that syncs my university's LMS and schedules spaced repetition. All in production. All AI-assisted.
 
 This is the story of how that happened, what it actually means, and why the line between "builder" and "operator" is thinner than anyone expected.
 
@@ -52,17 +52,17 @@ The problem I wanted to solve: I had AI agents running on three different machin
 
 The supervision layer is the part I'm most proud of. Every session's output streams through an LLM classifier that catches failure patterns simple heuristics miss. An agent stuck in a retry loop looks active by process metrics, but the supervisor recognises the repetition and escalates. I get a Mattermost notification only when something actually needs attention. That single feature changed the operational model from "check on agents every 20 minutes" to "get told when something's wrong."
 
-Beyond supervision, the platform encodes institutional knowledge as 42 custom skills: reusable agent workflows for deployment, debugging, plan execution, code review, memory management, and a dozen other operational procedures. Each skill is a version-controlled, testable specification that agents consume at session start. It's context engineering as infrastructure, and it's the discipline that makes agents reliable instead of impressive.
+Beyond supervision, the platform encodes institutional knowledge as 13 custom skills: reusable agent workflows for deployment, debugging, plan execution, code review, memory management, and a dozen other operational procedures. Each skill is a version-controlled, testable specification that agents consume at session start. It's context engineering as infrastructure, and it's the discipline that makes agents reliable instead of impressive.
 
 The React observability dashboard ties it together: session state, task progress, hook-based event ingestion, and real-time agent health. The surprise was how much the feedback loop mattered. The platform was built by agents running on the platform. Every deployment bug was immediately felt, because the sessions fixing the code were running on the infrastructure the code managed.
 
 ### Homelab infrastructure platform
 
-This started as "run a few self-hosted services" and became 88 deployments on k3s with proper infrastructure patterns: stable VIPs for every service, seven-layer monitoring with non-overlapping scopes, automated remediation with escalation gates.
+This started as "run a few self-hosted services" and became 114 deployments on k3s with proper infrastructure patterns: stable VIPs for every service, seven-layer monitoring with non-overlapping scopes, automated remediation with escalation gates.
 
 The monitoring architecture deserves its own paragraph. Seven independent layers, each with exclusive scope: Blackbox Exporter for infrastructure connectivity, Uptime Kuma for service-layer HTTP checks, LibreNMS for SNMP and network devices, Prometheus/Grafana for workload metrics, Netdata for per-node real-time anomaly detection, Wazuh for SIEM and host intrusion detection, and Falco for runtime security monitoring of container behaviour. Early on, I had two tools probing the same endpoints and firing duplicate alerts. The fix wasn't better deduplication; it was drawing hard boundaries. Each layer owns its domain exclusively. That single design decision cut alert noise by roughly half.
 
-The auto-remediation pipeline taught a similar lesson about restraint. It deliberately refuses to restart OOMKilled pods (they need a memory limit change, not a restart) and escalates to a human after two failed attempts. Fix what you can confidently fix; get out of the way for everything else. 684 infrastructure commits in 2026 alone, because every change is a commit.
+The auto-remediation pipeline taught a similar lesson about restraint. It deliberately refuses to restart OOMKilled pods (they need a memory limit change, not a restart) and escalates to a human after two failed attempts. Fix what you can confidently fix; get out of the way for everything else. 1,306 infrastructure commits in 2026 alone, because every change is a commit.
 
 ### Celebrate (study automation)
 
