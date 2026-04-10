@@ -1,5 +1,5 @@
 ---
-title: "Context Engineering: Making AI Agents Actually Useful at Scale"
+title: 'Context Engineering: Making AI Agents Actually Useful at Scale'
 description: What separates a useful AI agent from an expensive one isn't model capability. It's information architecture. Lessons from hundreds of Claude Code sessions running production infrastructure.
 pubDate: 2026-03-05
 tags: [ai-infrastructure, context-engineering, mcp, agent-orchestration]
@@ -18,13 +18,13 @@ In practice, this means a 300-line rules file has a dead zone in the middle. Ins
 
 My homelab's `CLAUDE.md` file, the primary context document that every agent session loads, follows this structure:
 
-| Position | Content | Why |
-|----------|---------|-----|
-| Top 50 lines | Non-negotiable rules, session startup protocol | Maximum attention |
-| Top 100 lines | Known failure mode table (symptom to root cause) | High-frequency reference |
-| Middle | Infrastructure reference, architecture tables | Acceptable attention; structured data parses better than prose even in the dead zone |
-| Second-to-last section | Context Router (what to read before working in each area) | Recency bias; the agent reads this just before starting work |
-| Final section | Priority declarations, closing anchor | Attention peak |
+| Position               | Content                                                   | Why                                                                                  |
+| ---------------------- | --------------------------------------------------------- | ------------------------------------------------------------------------------------ |
+| Top 50 lines           | Non-negotiable rules, session startup protocol            | Maximum attention                                                                    |
+| Top 100 lines          | Known failure mode table (symptom to root cause)          | High-frequency reference                                                             |
+| Middle                 | Infrastructure reference, architecture tables             | Acceptable attention; structured data parses better than prose even in the dead zone |
+| Second-to-last section | Context Router (what to read before working in each area) | Recency bias; the agent reads this just before starting work                         |
+| Final section          | Priority declarations, closing anchor                     | Attention peak                                                                       |
 
 This isn't theoretical. I tracked context engineering failures across sessions and found that 17 of 180 friction events were cases where the agent built the wrong thing because it missed or misinterpreted an instruction. The majority of those instructions were in the mid-context dead zone before I restructured the file.
 
@@ -48,7 +48,7 @@ Here's the same information in two formats.
 
 The human version is 45 tokens. The table version is 20 tokens and parses more reliably under the attention curve. When you've got a 300-line rules file and every token counts, the choice is obvious.
 
-This principle scales beyond rules files into application config. I'm building a study automation platform called celebrate that syncs with my university's Canvas LMS, manages assignment pipelines, and generates revision schedules. The entire platform's behaviour is defined in a single `celebrate.config.yaml`: Canvas API endpoints, assignment pipeline stages, scheduling constraints, content generation settings, spaced repetition parameters. That YAML file isn't just application config; it's machine-readable context. When an agent works on celebrate, it reads the config and immediately knows the pipeline stages (`detected > repo_setup > research > drafting > scheduled > ready > in_progress > review > submitted`), the Canvas API paths, the scheduling rules. No prose explanation needed. The config *is* the documentation.
+This principle scales beyond rules files into application config. I'm building a study automation platform called celebrate that syncs with my university's Canvas LMS, manages assignment pipelines, and generates revision schedules. The entire platform's behaviour is defined in a single `celebrate.config.yaml`: Canvas API endpoints, assignment pipeline stages, scheduling constraints, content generation settings, spaced repetition parameters. That YAML file isn't just application config; it's machine-readable context. When an agent works on celebrate, it reads the config and immediately knows the pipeline stages (`detected > repo_setup > research > drafting > scheduled > ready > in_progress > review > submitted`), the Canvas API paths, the scheduling rules. No prose explanation needed. The config _is_ the documentation.
 
 The general rules for machine-readable formatting:
 
@@ -57,7 +57,7 @@ The general rules for machine-readable formatting:
 - **Exact references.** `docs/service-lifecycle.md` rather than "the service docs."
 - **Concrete tool call syntax.** `openmemory_query("HANDOFF homelab", k=5)` rather than "check OpenMemory for handoff notes."
 - **No embedded code walkthroughs.** Thought/Action/Observation example blocks cause the model to mimic them as text output instead of actually executing tools.
-- **YAML over prose for multi-field config.** If you're defining pipeline stages, scheduling constraints, or API endpoints, a YAML block with typed fields beats a paragraph every time. Agents parse structured data natively; they have to *infer* structure from prose.
+- **YAML over prose for multi-field config.** If you're defining pipeline stages, scheduling constraints, or API endpoints, a YAML block with typed fields beats a paragraph every time. Agents parse structured data natively; they have to _infer_ structure from prose.
 
 ## The Rules File as Infrastructure
 
@@ -88,7 +88,7 @@ One of the less obvious context engineering patterns is using application state 
 
 This is a context engineering problem disguised as an integration problem. The naive approach would be to give the agent Canvas API credentials and let it poll directly. That's wasteful (repeated API calls, token-heavy JSON parsing, auth token management) and fragile (rate limits, pagination edge cases, session timeouts). The better approach: an n8n workflow handles the polling, normalises the data, and writes it somewhere the agent can read it cheaply. The agent's context stays lean. The external system's complexity is absorbed by the automation layer, not the agent's context window.
 
-The celebrate platform takes this further. Each assignment moves through a nine-stage pipeline, and agents consume that pipeline state to decide what to do next. When an agent picks up an assignment in `research` stage, it knows to pull readings from the RAG API and draft an outline in Docmost. When it's in `review` stage, the agent knows to run quality checks against AGLC4 citation standards. The pipeline state *is* the instruction. No separate prompt needed.
+The celebrate platform takes this further. Each assignment moves through a nine-stage pipeline, and agents consume that pipeline state to decide what to do next. When an agent picks up an assignment in `research` stage, it knows to pull readings from the RAG API and draft an outline in Docmost. When it's in `review` stage, the agent knows to run quality checks against AGLC4 citation standards. The pipeline state _is_ the instruction. No separate prompt needed.
 
 ## Sub-Agent Communication via Filesystem
 

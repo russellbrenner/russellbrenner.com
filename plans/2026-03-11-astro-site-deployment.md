@@ -26,6 +26,7 @@ image is `git.itsa.house/rbrenner/russellbrenner:latest`.
 ## Content Inventory
 
 ### Written (previous session)
+
 - `site/config.ts` — full rewrite with Russell's details
 - `site/hero.md` — positioning statement
 - `site/cta.md` — contact CTA
@@ -37,11 +38,13 @@ image is `git.itsa.house/rbrenner/russellbrenner:latest`.
 - `site/content/projects/homelab.md` — homelab infrastructure
 
 ### To Write (this session)
+
 - `site/content/posts/not-a-software-engineer.md`
 - `site/content/posts/network-engineer-law-school.md`
 - `site/content/posts/context-engineering.md`
 
 ### To Delete
+
 - All Spaceship demo posts, projects, appearances
 
 ## Steps
